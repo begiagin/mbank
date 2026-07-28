@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 const menuData = [
   {
+    key: 'identity',
     title: 'استعلام هویتی',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,6 +19,7 @@ const menuData = [
     ],
   },
   {
+    key: 'subsystems',
     title: 'سامانه های جانبي',
     icon: (
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,11 +42,17 @@ const menuData = [
   },
 ]
 
-const Sidebar = ({ onLogout }) => {
+const Sidebar = ({ onLogout, onMenuClick }) => {
   const [openIndex, setOpenIndex] = useState(null)
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index)
+  }
+
+  const handleClick = (menuKey) => {
+    if (onMenuClick) {
+      onMenuClick(menuKey)
+    }
   }
 
   return (
@@ -62,8 +70,12 @@ const Sidebar = ({ onLogout }) => {
                 return (
                   <li key={index}>
                     <button
-                      onClick={() => toggle(index)}
-                      className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                      onClick={() => { toggle(index); handleClick(item.key) }}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-sm rounded-md transition-colors ${
+                        openIndex === index
+                          ? 'bg-gray-100 text-gray-900'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
                     >
                       <span className="flex items-center gap-2">
                         {item.icon}
@@ -106,7 +118,7 @@ const Sidebar = ({ onLogout }) => {
                 <li key={index}>
                   {item.destructive ? (
                     <button
-                      onClick={onLogout}
+                      onClick={() => { onLogout(); handleClick(item.key) }}
                       className="w-full text-right px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md transition-colors cursor-pointer bg-white border-none"
                     >
                       {item.title}
@@ -114,6 +126,7 @@ const Sidebar = ({ onLogout }) => {
                   ) : (
                     <a
                       href={item.path}
+                      onClick={(e) => { e.preventDefault(); handleClick(item.key) }}
                       className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors no-underline"
                     >
                       {item.title}

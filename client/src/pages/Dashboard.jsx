@@ -5,11 +5,55 @@ import Sidebar from '../components/Sidebar'
 const Dashboard = () => {
   const { logout } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
+  const [activeMenu, setActiveMenu] = useState(null)
+
+  const handleMenuClick = (menuKey) => {
+    setActiveMenu(activeMenu === menuKey ? null : menuKey)
+  }
+
+  const renderContent = () => {
+    switch (activeMenu) {
+      case 'identity':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">استعلام هویتی</h2>
+            <p className="text-gray-400 text-sm">محتوای استعلام هویتی</p>
+          </div>
+        )
+      case 'subsystems':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">سامانه های جانبي</h2>
+            <p className="text-gray-400 text-sm">محتوای سامانه های جانبي</p>
+          </div>
+        )
+      case 'profile':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">پروفایل کاربری</h2>
+            <p className="text-gray-400 text-sm">محتوای پروفایل</p>
+          </div>
+        )
+      case 'settings':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">تنظیمات</h2>
+            <p className="text-gray-400 text-sm">محتوای تنظیمات</p>
+          </div>
+        )
+      default:
+        return (
+          <div className="flex items-center justify-center h-full">
+            <p className="text-gray-400 text-sm">لطفاً یکی از منوهای سمت راست را انتخاب کنید</p>
+          </div>
+        )
+    }
+  }
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-[#454a4e] text-white h-16 flex items-center">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between w-full">
+        <div className="w-full px-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-white text-sm">وب سایت بانک</span>
             <span className="text-white/40">|</span>
@@ -59,14 +103,14 @@ const Dashboard = () => {
 
       <main className="flex-1 overflow-hidden" style={{ margin: '3px' }}>
         <div className="h-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-[1%] h-full" style={{ marginRight: 'calc(13.5% + 3px)' }}>
-            <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-full p-[1%]">
+            {renderContent()}
           </div>
         </div>
       </main>
 
       <div className="fixed top-16 right-0 overflow-y-auto" style={{ width: '13.5%', bottom: '3rem', paddingTop: '3px' }}>
-        <Sidebar onLogout={logout} />
+        <Sidebar onLogout={logout} onMenuClick={handleMenuClick} />
       </div>
 
       <footer className="bg-[#454a4e] text-white/70 text-center py-3 text-xs border-t-2 border-red-600">
