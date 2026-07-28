@@ -80,7 +80,7 @@ const Login = () => {
         <div className="w-full max-w-md">
           <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
             <div className="bg-gray-50 border-b-2 border-red-500 px-6 py-3 text-center">
-              <h2 className="text-gray-700 text-base font-bold font-vazirmatn">
+              <h2 className="text-gray-700 text-base font-bold font-iransans">
                 ورود به سامانه بانکداری اینترنتی
               </h2>
               <p className="text-gray-400 text-xs mt-1">
@@ -113,7 +113,7 @@ const Login = () => {
                     onChange={handleChange}
                     required
                     maxLength={20}
-                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-vazirmatn"
+                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
                     placeholder="شناسه مشتری"
                     autoComplete="off"
                   />
@@ -138,7 +138,7 @@ const Login = () => {
                     onChange={handleChange}
                     required
                     maxLength={15}
-                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-vazirmatn"
+                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
                     placeholder="کلمه عبور"
                     autoComplete="off"
                   />
