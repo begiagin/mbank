@@ -57,7 +57,7 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 overflow-hidden" style={{ margin: '3px' }}>
+      <main className="flex-1 overflow-hidden" style={{ margin: '3px', paddingRight: 'calc(22% + 3px)' }}>
         <div className="h-full">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full">
             <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
