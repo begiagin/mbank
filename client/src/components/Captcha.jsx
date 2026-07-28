@@ -18,7 +18,7 @@ const Captcha = ({ onChange, value }) => {
   }, [])
 
   const handleChange = (e) => {
-    const input = e.target.value.replace(/[^۰-۹]/g, '')
+    const input = e.target.value.replace(/[^\u06F0-\u06F9]/g, '')
     if (input.length <= 6) {
       onChange(input)
     }
@@ -26,7 +26,7 @@ const Captcha = ({ onChange, value }) => {
 
   return (
     <div>
-      <label className="block text-gray-700 text-sm font-bold mb-1.5">
+      <label className="block text-gray-700 text-sm font-bold mb-1.5 iransans">
         <span className="text-red-500">*</span>{' '}
         عبارت امنیتی
       </label>
@@ -44,15 +44,13 @@ const Captcha = ({ onChange, value }) => {
             onChange={handleChange}
             required
             maxLength={6}
-            className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-vazirmatn"
+            className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none"
             placeholder="۶ رقم عبارت امنیتی"
             autoComplete="off"
-            dir="ltr"
-            inputMode="numeric"
           />
         </div>
-        <div className="w-24 h-10 bg-gray-100 rounded-md flex items-center justify-center text-gray-800 text-sm border border-gray-300 select-none cursor-pointer hover:bg-gray-200 transition-colors font-vazirmatn tracking-widest" onClick={refresh}>
-          <span>{captchaText}</span>
+        <div className="w-24 h-10 bg-red-700 rounded-md flex items-center justify-center text-white text-lg font-bold border-2 border-red-800 select-none cursor-pointer hover:bg-red-800 transition-colors tracking-widest" onClick={refresh}>
+          <span className="font-vazirmatn">{captchaText}</span>
         </div>
       </div>
     </div>
