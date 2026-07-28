@@ -6,7 +6,7 @@ import Login from './pages/Login'
 const ProtectedRoute = ({ children }) => {
   const { token } = useAuth()
   if (!token) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/bbanking/auth/login" replace />
   }
   return children
 }
@@ -16,7 +16,7 @@ const App = () => {
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/bbanking/auth/login" element={<Login />} />
           <Route
             path="/dashboard"
             element={
@@ -25,7 +25,7 @@ const App = () => {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="*" element={<Navigate to="/bbanking/auth/login" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
