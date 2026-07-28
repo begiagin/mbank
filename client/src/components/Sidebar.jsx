@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 const menuData = [
-  { title: 'پروفایل کاربری', path: '#' },
   { title: 'تنظیمات', path: '#' },
   { divider: true },
   { title: 'خروج', path: '#', destructive: true },

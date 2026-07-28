@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import Sidebar from '../components/Sidebar'
 
 const Dashboard = () => {
   const { logout } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-100 flex flex-col">
@@ -22,7 +23,35 @@ const Dashboard = () => {
           <div className="flex items-center gap-4">
             <span className="text-white/70 text-xs">سه شنبه ۶ مرداد ۱۴۰۵</span>
             <div className="relative">
-              <button className="text-white text-sm hover:text-gray-200">پروفایل</button>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="text-white text-sm hover:text-gray-200 transition-colors"
+              >
+                پروفایل ▾
+              </button>
+              {menuOpen && (
+                <div className="absolute left-0 top-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 min-w-[140px] z-50">
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100 no-underline"
+                  >
+                    پروفایل کاربری
+                  </a>
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100 no-underline"
+                  >
+                    تنظیمات
+                  </a>
+                  <hr className="border-gray-200 my-1" />
+                  <button
+                    onClick={logout}
+                    className="block w-full text-right px-4 py-2 text-red-600 text-sm hover:bg-gray-100 transition-colors cursor-pointer bg-white border-none"
+                  >
+                    خروج
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
