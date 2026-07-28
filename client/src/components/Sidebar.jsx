@@ -1,6 +1,11 @@
 import React, { useState } from 'react'
 
 const menuData = [
+  { title: 'پروفایل کاربری', path: '#' },
+  { title: 'تنظیمات', path: '#' },
+  { divider: true },
+  { title: 'خروج', path: '#', destructive: true },
+  { divider: true },
   {
     title: 'استعلام هویتی',
     icon: (
@@ -29,48 +34,73 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-white border-l border-gray-200 min-h-full shadow-sm overflow-y-auto">
       <div className="p-3">
-        <div className="mb-4">
-          <h3 className="text-gray-700 text-sm font-bold mb-2">منوی استعلامات</h3>
-        </div>
         <nav>
           <ul className="space-y-1">
-            {menuData.map((item, index) => (
-              <li key={index}>
-                <button
-                  onClick={() => toggle(index)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                >
-                  <span className="flex items-center gap-2">
-                    {item.icon}
-                    {item.title}
-                  </span>
-                  <svg
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      openIndex === index ? 'rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                {openIndex === index && (
-                  <ul className="mt-1 space-y-0.5 pr-4">
-                    {item.submenu.map((sub, subIndex) => (
-                      <li key={subIndex}>
-                        <a
-                          href={sub.path}
-                          className="block px-3 py-1.5 text-xs text-gray-600 hover:text-red-700 hover:bg-gray-50 rounded transition-colors no-underline"
-                        >
-                          {sub.label}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+            {menuData.map((item, index) => {
+              if (item.divider) {
+                return (
+                  <li key={`divider-${index}`} className="my-2 border-t border-gray-200" />
+                )
+              }
+              if (item.submenu) {
+                return (
+                  <li key={index}>
+                    <button
+                      onClick={() => toggle(index)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                    >
+                      <span className="flex items-center gap-2">
+                        {item.icon}
+                        {item.title}
+                      </span>
+                      <svg
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          openIndex === index ? 'rotate-180' : ''
+                        }`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {openIndex === index && (
+                      <ul className="mt-1 space-y-0.5 pr-4">
+                        {item.submenu.map((sub, subIndex) => (
+                          <li key={subIndex}>
+                            <a
+                              href={sub.path}
+                              className="block px-3 py-1.5 text-xs text-gray-600 hover:text-red-700 hover:bg-gray-50 rounded transition-colors no-underline"
+                            >
+                              {sub.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                )
+              }
+              return (
+                <li key={index}>
+                  {item.destructive ? (
+                    <button
+                      onClick={() => {}}
+                      className="w-full text-right px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md transition-colors cursor-pointer bg-white border-none"
+                    >
+                      {item.title}
+                    </button>
+                  ) : (
+                    <a
+                      href={item.path}
+                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md transition-colors no-underline"
+                    >
+                      {item.title}
+                    </a>
+                  )}
+                </li>
+              )
+            })}
           </ul>
         </nav>
       </div>
