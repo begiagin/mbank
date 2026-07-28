@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from 'react'
 
-const PERSIAN_DIGITS = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']
+const FA_DIGITS = '۰۱۲۳۴۵۶۷۸۹'
+const EN_DIGITS = '0123456789'
+const EN_TO_FA = Object.fromEntries(EN_DIGITS.split('').map((d, i) => [d, FA_DIGITS[i]]))
 
 const generateCaptcha = () => {
   let result = ''
   for (let i = 0; i < 6; i++) {
-    result += PERSIAN_DIGITS[Math.floor(Math.random() * 10)]
+    result += FA_DIGITS[Math.floor(Math.random() * 10)]
   }
   return result
 }
@@ -18,15 +20,20 @@ const Captcha = ({ onChange, value }) => {
   }, [])
 
   const handleChange = (e) => {
-    const input = e.target.value.replace(/[^\u06F0-\u06F9]/g, '')
-    if (input.length <= 6) {
-      onChange(input)
+    const raw = e.target.value
+    const cleaned = raw
+      .split('')
+      .filter((c) => FA_DIGITS.includes(c) || EN_DIGITS.includes(c))
+      .map((c) => (EN_DIGITS.includes(c) ? EN_TO_FA[c] : c))
+      .join('')
+    if (cleaned.length <= 6) {
+      onChange(cleaned)
     }
   }
 
   return (
     <div>
-      <label className="block text-gray-700 text-sm font-bold mb-1.5 iransans">
+      <label className="block text-gray-700 text-sm font-bold mb-1.5">
         <span className="text-red-500">*</span>{' '}
         عبارت امنیتی
       </label>
@@ -50,7 +57,7 @@ const Captcha = ({ onChange, value }) => {
           />
         </div>
         <div className="w-24 h-10 bg-red-700 rounded-md flex items-center justify-center text-white text-lg font-bold border-2 border-red-800 select-none cursor-pointer hover:bg-red-800 transition-colors tracking-widest" onClick={refresh}>
-          <span className="font-vazirmatn">{captchaText}</span>
+          <span>{captchaText}</span>
         </div>
       </div>
     </div>
