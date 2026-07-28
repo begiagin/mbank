@@ -22,18 +22,15 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-4" style={{ marginRight: '24%' }}>
-        <div className="flex flex-row-reverse gap-4">
-          <div className="flex-1">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
-            </div>
+      <div className="max-w-6xl mx-auto w-full px-4 py-3 flex gap-3">
+        <div className="flex-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
           </div>
         </div>
-      </main>
-
-      <div className="fixed top-0 right-0 bottom-0" style={{ paddingTop: '5px', paddingLeft: '5px', paddingBottom: '5px', width: '22%' }}>
-        <Sidebar />
+        <div className="w-64 flex-shrink-0">
+          <Sidebar />
+        </div>
       </div>
 
       <footer className="bg-[#454a4e] text-white/70 text-center py-3 text-xs border-t-2 border-red-600">
