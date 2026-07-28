@@ -42,18 +42,18 @@ const Login = () => {
     <div dir="rtl" className="min-h-screen bg-gray-100 flex flex-col">
       <header className="bg-[#454a4e] text-white">
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <span className="text-white text-sm">وب سایت بانک</span>
             <span className="text-white/40">|</span>
             <span className="text-white text-sm">پشتیبانی</span>
             <span className="text-white/40">|</span>
             <span className="text-white text-sm">راهنما</span>
           </div>
-          <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+          <div className="flex items-center gap-2 mx-auto">
             <img src="/logo.png" alt="Bank Melli" className="h-10 w-auto" />
           </div>
-          <div className="flex items-center gap-2">
-            <span className="text-white/70 text-xs">سه شنبه ۶ مرداد ۱۴۰۵</span>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-white/70 text-xs hidden sm:inline">سه شنبه ۶ مرداد ۱۴۰۵</span>
           </div>
         </div>
       </header>
