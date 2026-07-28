@@ -59,7 +59,7 @@ const Dashboard = () => {
 
       <main className="flex-1 overflow-hidden" style={{ margin: '3px' }}>
         <div className="h-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full" style={{ marginRight: 'calc(14% + 3px)' }}>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-[1%] h-full" style={{ marginRight: 'calc(14% + 3px)' }}>
             <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
           </div>
         </div>
