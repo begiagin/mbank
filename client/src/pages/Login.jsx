@@ -49,11 +49,7 @@ const Login = () => {
             <span className="text-white text-sm">راهنما</span>
           </div>
           <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-            <svg className="w-8 h-8 text-white" viewBox="0 0 100 100" fill="currentColor">
-              <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="3" />
-              <text x="50" y="55" textAnchor="middle" fill="currentColor" fontSize="22" fontWeight="bold">ب</text>
-            </svg>
-            <span className="text-white font-bold text-lg font-vazirmatn">بانک ملت</span>
+            <img src="/logo.png" alt="Bank Melli" className="h-10 w-auto" />
           </div>
           <div className="flex items-center gap-2">
             <span className="text-white/70 text-xs">سه شنبه ۶ مرداد ۱۴۰۵</span>
