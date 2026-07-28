@@ -27,8 +27,8 @@ const Sidebar = () => {
   }
 
   return (
-    <aside className="w-64 bg-white border-l border-gray-200 min-h-[calc(100vh-120px)] shadow-sm">
-      <div className="p-4">
+    <aside className="w-64 bg-white border-l border-gray-200 min-h-full shadow-sm overflow-y-auto">
+      <div className="p-3">
         <div className="mb-4">
           <h3 className="text-gray-700 text-sm font-bold mb-2">منوی استعلامات</h3>
         </div>
