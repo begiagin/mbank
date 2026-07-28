@@ -59,13 +59,13 @@ const Dashboard = () => {
 
       <main className="flex-1 overflow-hidden" style={{ margin: '3px' }}>
         <div className="h-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full" style={{ marginRight: 'calc(22% + 3px)' }}>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 h-full" style={{ marginRight: 'calc(17% + 3px)' }}>
             <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
           </div>
         </div>
       </main>
 
-      <div className="fixed top-16 right-0 overflow-y-auto" style={{ width: '22%', bottom: '3rem', paddingTop: '3px' }}>
+      <div className="fixed top-16 right-0 overflow-y-auto" style={{ width: '17%', bottom: '3rem', paddingTop: '3px' }}>
         <Sidebar onLogout={logout} />
       </div>
 
