@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import authRoutes from './routes/auth.js'
+import { seedTestUser } from './models/User.js'
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'خطای داخلی سرور' })
 })
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  await seedTestUser()
   console.log(`mBank server running on port ${PORT}`)
 })

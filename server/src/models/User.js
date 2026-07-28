@@ -40,6 +40,14 @@ export const createUser = async (userData) => {
   })
 }
 
-export const verifyPassword = async (plainPassword, hashedPassword) => {
-  return bcrypt.compare(plainPassword, hashedPassword)
+export const seedTestUser = async () => {
+  const existing = await findUserByUsername('1219885649')
+  if (!existing) {
+    await createUser({
+      username: '1219885649',
+      password: '1364123110',
+      fullName: 'کاربر تست',
+    })
+    console.log('Test user seeded: 1219885649')
+  }
 }
