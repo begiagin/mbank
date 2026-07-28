@@ -122,13 +122,8 @@ export function gregorianYearRange(startYear, endYear) {
   return years
 }
 
-export function getNextYears(count = 5) {
-  const now = new Date()
-  const result = []
-  for (let i = 0; i < count; i++) {
-    const y = now.getFullYear() + i
-    const { year } = gToJ(y, 1, 1)
-    result.push(year)
-  }
-  return result
+export function getPersianYears(start = 1364, end = 1410) {
+  const years = []
+  for (let y = start; y <= end; y++) years.push(y)
+  return years
 }

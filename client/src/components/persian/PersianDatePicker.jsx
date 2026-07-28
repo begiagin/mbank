@@ -4,7 +4,7 @@ import {
   gregorianYearRange,
   getMonthDaysPY,
   PERSIAN_MONTHS,
-  getNextYears,
+  getPersianYears,
 } from './persianDate.js'
 
 const PersianDatePicker = ({ value, onChange, placeholder }) => {
@@ -15,7 +15,7 @@ const PersianDatePicker = ({ value, onChange, placeholder }) => {
   const [years, setYears] = useState([])
 
   useEffect(() => {
-    setYears(getNextYears(5))
+    setYears(getPersianYears(1364, 1410))
   }, [])
 
   useEffect(() => {
