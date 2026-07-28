@@ -7,8 +7,8 @@ const Dashboard = () => {
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-100 flex flex-col">
-      <header className="bg-[#454a4e] text-white">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between h-16">
+      <header className="bg-[#454a4e] text-white h-16 flex items-center">
+        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between w-full">
           <div className="flex items-center gap-2">
             <span className="text-white text-sm">وب سایت بانک</span>
             <span className="text-white/40">|</span>
@@ -18,6 +18,12 @@ const Dashboard = () => {
           </div>
           <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
             <img src="/logo.png" alt="Bank Melli" className="h-10 w-auto" />
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-white/70 text-xs">سه شنبه ۶ مرداد ۱۴۰۵</span>
+            <div className="relative">
+              <button className="text-white text-sm hover:text-gray-200">پروفایل</button>
+            </div>
           </div>
         </div>
       </header>
@@ -32,8 +38,8 @@ const Dashboard = () => {
         </div>
       </main>
 
-      <div className="fixed top-16 right-0 bottom-0 overflow-y-auto" style={{ width: '22%', padding: '3px 0' }}>
-        <Sidebar />
+      <div className="fixed top-16 right-0 overflow-y-auto" style={{ width: '22%', bottom: '3rem', paddingTop: '3px' }}>
+        <Sidebar onLogout={logout} />
       </div>
 
       <footer className="bg-[#454a4e] text-white/70 text-center py-3 text-xs border-t-2 border-red-600">

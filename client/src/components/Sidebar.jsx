@@ -24,7 +24,7 @@ const menuData = [
   },
 ]
 
-const Sidebar = () => {
+const Sidebar = ({ onLogout }) => {
   const [openIndex, setOpenIndex] = useState(null)
 
   const toggle = (index) => {
@@ -85,7 +85,7 @@ const Sidebar = () => {
                 <li key={index}>
                   {item.destructive ? (
                     <button
-                      onClick={() => {}}
+                      onClick={onLogout}
                       className="w-full text-right px-3 py-2 text-sm text-red-600 hover:bg-gray-100 rounded-md transition-colors cursor-pointer bg-white border-none"
                     >
                       {item.title}
