@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import api from '../api'
 
@@ -13,6 +13,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const redirectTo = searchParams.get('redirectTo') || '/dashboard'
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -25,7 +27,7 @@ const Login = () => {
     try {
       const data = await login(formData)
       if (data.token) {
-        navigate('/dashboard')
+        navigate(redirectTo)
       } else {
         setError(data.message || 'خطا در ورود')
       }
