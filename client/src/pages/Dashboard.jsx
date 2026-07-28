@@ -1,13 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useAuth } from '../auth/AuthContext'
+import Sidebar from '../components/Sidebar'
 
 const Dashboard = () => {
   const { logout } = useAuth()
-  const [menuOpen, setMenuOpen] = useState(false)
-
-  const handleLogout = () => {
-    logout()
-  }
 
   return (
     <div dir="rtl" className="min-h-screen bg-gray-100 flex flex-col">
@@ -23,49 +19,35 @@ const Dashboard = () => {
           <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
             <img src="/logo.png" alt="Bank Melli" className="h-10 w-auto" />
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-white/70 text-xs">سه شنبه ۶ مرداد ۱۴۰۵</span>
-            <div className="relative">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="text-white text-sm hover:text-gray-200 transition-colors"
-              >
-                ☰
-              </button>
-              {menuOpen && (
-                <div className="absolute left-0 top-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 min-w-[160px] z-50">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100 no-underline"
-                  >
-                    پروفایل کاربری
-                  </a>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 text-sm hover:bg-gray-100 no-underline"
-                  >
-                    تنظیمات
-                  </a>
-                  <hr className="border-gray-200 my-1" />
-                  <button
-                    onClick={handleLogout}
-                    className="block w-full text-right px-4 py-2 text-red-600 text-sm hover:bg-gray-100 transition-colors cursor-pointer bg-white border-none"
-                  >
-                    خروج
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
       </header>
 
       <div className="bg-gradient-to-r from-red-700 to-red-800">
-
+        <div className="max-w-6xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="text-white text-sm font-bold">
+              نسخه جدید سامانه بانکداری اینترنتی اشخاص حقوقی
+            </div>
+            <a
+              href="https://biz2.bankmellat.ir/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-white text-gray-800 px-4 py-1.5 rounded-md text-sm font-bold no-underline hover:bg-gray-100"
+            >
+              ورود به سامانه جدید
+            </a>
+          </div>
+        </div>
       </div>
 
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-6xl">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-4">
+        <div className="flex gap-4">
+          <div className="flex-1">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
+            </div>
+          </div>
+          <Sidebar />
         </div>
       </main>
 
