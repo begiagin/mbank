@@ -1,10 +1,6 @@
 import React, { useState } from 'react'
 
 const menuData = [
-  { title: 'تنظیمات', path: '#' },
-  { divider: true },
-  { title: 'خروج', path: '#', destructive: true },
-  { divider: true },
   {
     title: 'استعلام هویتی',
     icon: (
