@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useAuth } from '../auth/AuthContext'
 import Sidebar from '../components/Sidebar'
+import api from '../api'
 import PersianDatePicker from '../components/persian/PersianDatePicker'
 
 const Dashboard = () => {
@@ -9,13 +10,45 @@ const Dashboard = () => {
   const [profileOpen, setProfileOpen] = useState(false)
   const [activeMenu, setActiveMenu] = useState(null)
   const [formData, setFormData] = useState({
-    date: '',
-    checkNumber: '',
-    nationalId: '',
+    registrationDate: '',
+    dueDate: '',
+    treasuryDate: '',
+    serialNumber: '',
+    batchNumber: '',
+    initialInquiryHolder: '',
+    ownerFullName: '',
+    ownerNationalId: '',
+    firstPayeeFullName: '',
+    firstPayeeNationalId: '',
+    processingBranch: '',
+    checkAmount: '',
+    checkAmountWords: '',
   })
+  const [results, setResults] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleDateChange = (field, isoDate) => {
+    setFormData({ ...formData, [field]: isoDate })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    setResults([])
+    try {
+      const data = await api.post('/check-inquiry/search', formData)
+      setResults(data.results || [])
+    } catch (err) {
+      setError(err.message || 'خطا در جستجو')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleMenuClick = (menuKey) => {
@@ -29,80 +62,228 @@ const Dashboard = () => {
         return (
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">استعلام چکاوک</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-              }}
-              className="space-y-4"
-            >
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-1.5">
-                  <span className="text-red-500">*</span>{' '}
-                  تاریخ چک
-                </label>
-                <PersianDatePicker
-                  value={formData.date}
-                  onChange={(isoDate, persianDate) => {
-                    setFormData({ ...formData, date: isoDate })
-                  }}
-                  placeholder="انتخاب تاریخ"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-1.5">
-                  <span className="text-red-500">*</span>{' '}
-                  شماره چک صیادی
-                </label>
-                <div className="flex items-center border border-gray-300 rounded-md bg-gray-50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
-                  <div className="px-3 py-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-                    </svg>
-                  </div>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-sm text-center">
+                  {error}
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    تاریخ ثبت
+                  </label>
+                  <PersianDatePicker
+                    value={formData.registrationDate}
+                    onChange={(iso) => handleDateChange('registrationDate', iso)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    تاریخ سر رسید
+                  </label>
+                  <PersianDatePicker
+                    value={formData.dueDate}
+                    onChange={(iso) => handleDateChange('dueDate', iso)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    تاریخ خزانه
+                  </label>
+                  <PersianDatePicker
+                    value={formData.treasuryDate}
+                    onChange={(iso) => handleDateChange('treasuryDate', iso)}
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    شماره صیاد
+                  </label>
                   <input
                     type="text"
-                    name="checkNumber"
-                    value={formData.checkNumber}
+                    name="serialNumber"
+                    value={formData.serialNumber}
                     onChange={handleChange}
-                    required
-                    maxLength={10}
-                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
-                    placeholder="شماره چک صیادی"
+                    maxLength={20}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="شماره صیاد"
                     autoComplete="off"
                   />
                 </div>
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-1.5">
-                  <span className="text-red-500">*</span>{' '}
-                  کد ملی صادر کننده چک
-                </label>
-                <div className="flex items-center border border-gray-300 rounded-md bg-gray-50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
-                  <div className="px-3 py-2">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                    </svg>
-                  </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    شماره دسته چک
+                  </label>
                   <input
                     type="text"
-                    name="nationalId"
-                    value={formData.nationalId}
+                    name="batchNumber"
+                    value={formData.batchNumber}
                     onChange={handleChange}
-                    required
+                    maxLength={20}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="شماره دسته چک"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    دارنده استعلام اولیه
+                  </label>
+                  <input
+                    type="text"
+                    name="initialInquiryHolder"
+                    value={formData.initialInquiryHolder}
+                    onChange={handleChange}
+                    maxLength={50}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="دارنده استعلام اولیه"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    نام و نام خانوادگی مالک
+                  </label>
+                  <input
+                    type="text"
+                    name="ownerFullName"
+                    value={formData.ownerFullName}
+                    onChange={handleChange}
+                    maxLength={50}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="نام و نام خانوادگی مالک"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    کد ملی مالک
+                  </label>
+                  <input
+                    type="text"
+                    name="ownerNationalId"
+                    value={formData.ownerNationalId}
+                    onChange={handleChange}
                     maxLength={10}
-                    className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
-                    placeholder="کد ملی صادر کننده چک"
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="کد ملی مالک"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    نام و نام خانوادگی وجه اول
+                  </label>
+                  <input
+                    type="text"
+                    name="firstPayeeFullName"
+                    value={formData.firstPayeeFullName}
+                    onChange={handleChange}
+                    maxLength={50}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="نام و نام خانوادگی وجه اول"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    کد ملی وجه اول
+                  </label>
+                  <input
+                    type="text"
+                    name="firstPayeeNationalId"
+                    value={formData.firstPayeeNationalId}
+                    onChange={handleChange}
+                    maxLength={10}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="کد ملی وجه اول"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    شعبه رسیدگی
+                  </label>
+                  <input
+                    type="text"
+                    name="processingBranch"
+                    value={formData.processingBranch}
+                    onChange={handleChange}
+                    maxLength={50}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="شعبه رسیدگی"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    مبلغ چک
+                  </label>
+                  <input
+                    type="text"
+                    name="checkAmount"
+                    value={formData.checkAmount}
+                    onChange={handleChange}
+                    maxLength={20}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="مبلغ چک"
+                    autoComplete="off"
+                  />
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    حروف چک
+                  </label>
+                  <input
+                    type="text"
+                    name="checkAmountWords"
+                    value={formData.checkAmountWords}
+                    onChange={handleChange}
+                    maxLength={200}
+                    className="w-full border border-gray-300 rounded-md bg-gray-50 px-3 py-2 text-sm text-gray-800 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 font-iransans"
+                    placeholder="حروف چک"
                     autoComplete="off"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-md transition-colors duration-200 mt-6 text-sm"
+                disabled={loading}
+                className="w-full bg-red-700 hover:bg-red-800 disabled:bg-red-400 text-white font-bold py-3 rounded-md transition-colors duration-200 mt-6 text-sm"
               >
-                جستجو
+                {loading ? 'در حال جستجو...' : 'جستجو'}
               </button>
             </form>
+            {results.length > 0 && (
+              <div className="mt-4 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h3 className="text-gray-700 text-sm font-bold mb-3">
+                  نتایج جستجو ({results.length})
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-right">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="px-3 py-2 text-gray-600 font-bold">تاریخ ثبت</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">شماره صیاد</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">مالک</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">مبلغ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.map((r, i) => (
+                        <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-3 py-2 text-gray-700">{r.registrationDate}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.serialNumber}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.ownerFullName}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.checkAmount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
           </div>
         )
       case 'identity':
