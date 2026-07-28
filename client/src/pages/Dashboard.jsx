@@ -103,7 +103,7 @@ const Dashboard = () => {
 
       <main className="flex-1 overflow-hidden" style={{ margin: '3px' }}>
         <div className="h-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-full p-[1%]">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 h-full" style={{ width: 'calc(100% - 13.5% - 3px)', padding: '1%' }}>
             {renderContent()}
           </div>
         </div>
