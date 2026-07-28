@@ -17,6 +17,27 @@ const menuData = [
       { label: 'استعلام گیشه حساب', path: '#' },
     ],
   },
+  {
+    title: 'سامانه های جانبي',
+    icon: (
+      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+    ),
+    submenu: [
+      { label: 'استعلام چکاوک', path: '#' },
+      { label: 'استعلام شهاب', path: '#' },
+      { label: 'سامانه سداد', path: '#' },
+      { label: 'کنترل خزانه', path: '#' },
+      { label: 'کارگروه وجوه نقدی', path: '#' },
+      { label: 'تبدیل وجوه', path: '#' },
+      { divider: true },
+      { label: 'سیستم نوبت تسویه', path: '#' },
+      { label: 'سامانه حديد', path: '#' },
+      { label: 'سامانه کنترل نقدینگی', path: '#' },
+      { label: 'سامانه کنترل شعبه', path: '#' },
+    ],
+  },
 ]
 
 const Sidebar = ({ onLogout }) => {
@@ -61,16 +82,21 @@ const Sidebar = ({ onLogout }) => {
                     </button>
                     {openIndex === index && (
                       <ul className="mt-1 space-y-0.5 pr-4">
-                        {item.submenu.map((sub, subIndex) => (
-                          <li key={subIndex}>
-                            <a
-                              href={sub.path}
-                              className="block px-3 py-1.5 text-xs text-gray-600 hover:text-red-700 hover:bg-gray-50 rounded transition-colors no-underline"
-                            >
-                              {sub.label}
-                            </a>
-                          </li>
-                        ))}
+                        {item.submenu.map((sub, subIndex) => {
+                          if (sub.divider) {
+                            return <li key={`divider-${index}-${subIndex}`} className="my-1 border-t border-gray-200" />
+                          }
+                          return (
+                            <li key={subIndex}>
+                              <a
+                                href={sub.path}
+                                className="block px-3 py-1.5 text-xs text-gray-600 hover:text-red-700 hover:bg-gray-50 rounded transition-colors no-underline"
+                              >
+                                {sub.label}
+                              </a>
+                            </li>
+                          )
+                        })}
                       </ul>
                     )}
                   </li>
