@@ -22,32 +22,16 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <div className="bg-gradient-to-r from-red-700 to-red-800">
-        <div className="max-w-6xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="text-white text-sm font-bold">
-              نسخه جدید سامانه بانکداری اینترنتی اشخاص حقوقی
-            </div>
-            <a
-              href="https://biz2.bankmellat.ir/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white text-gray-800 px-4 py-1.5 rounded-md text-sm font-bold no-underline hover:bg-gray-100"
-            >
-              ورود به سامانه جدید
-            </a>
-          </div>
-        </div>
-      </div>
-
       <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
+        <div className="flex flex-row-reverse gap-4 items-start">
+          <div className="w-64 flex-shrink-0">
+            <Sidebar />
+          </div>
+          <div className="flex-1" style={{ paddingRight: '5%', paddingLeft: '5%' }}>
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <p className="text-gray-400 text-sm">محتوای صفحه اصلی</p>
             </div>
           </div>
-          <Sidebar />
         </div>
       </main>
 
