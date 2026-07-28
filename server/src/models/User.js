@@ -40,6 +40,10 @@ export const createUser = async (userData) => {
   })
 }
 
+export const verifyPassword = async (plainPassword, hashedPassword) => {
+  return bcrypt.compare(plainPassword, hashedPassword)
+}
+
 export const seedTestUser = async () => {
   const existing = await findUserByUsername('1219885649')
   if (!existing) {
