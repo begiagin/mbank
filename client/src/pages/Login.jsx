@@ -164,12 +164,17 @@ const Login = () => {
                       required
                       maxLength={6}
                       className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-vazirmatn"
-                      placeholder="کد امنیتی"
+                      placeholder="۶ رقم عبارت امنیتی"
                       autoComplete="off"
+                      dir="ltr"
+                      inputMode="numeric"
+                      pattern="[۰-۹]{6}"
                     />
                   </div>
-                  <div className="w-24 h-10 bg-gray-200 rounded-md flex items-center justify-center text-gray-500 text-xs border border-gray-300">
-                    <span className="text-gray-400">Captcha</span>
+                  <div className="w-24 h-10 bg-gray-200 rounded-md flex items-center justify-center text-gray-500 text-xs border border-gray-300 select-none">
+                    <span className="font-vazirmatn text-lg tracking-widest text-red-600">
+                      {formData.captcha || '۰۰۰۰۰۰'}
+                    </span>
                   </div>
                 </div>
               </div>
