@@ -16,10 +16,10 @@ const COLUMNS = [
   { key: 'Status', label: 'وضعیت', sortable: true },
 ]
 
-const STATUS_LABELS = {
-  PASSED: 'پاس شده',
-  PENDING: 'در انتظار',
-  RETURNED: 'مرجوع شده',
+const STATUS_STYLES = {
+  PASSED: 'bg-green-100 text-green-800',
+  PENDING: 'bg-amber-100 text-amber-800',
+  RETURNED: 'bg-red-100 text-red-800',
 }
 
 function formatNumber(num) {
@@ -29,6 +29,12 @@ function formatNumber(num) {
 
 function formatStatus(status) {
   return STATUS_LABELS[status] || status || '-'
+}
+
+function statusBadge(status) {
+  const label = STATUS_LABELS[status] || status || '-'
+  const style = STATUS_STYLES[status] || 'bg-gray-100 text-gray-800'
+  return style
 }
 
 const CheckInquiryResults = ({ results, pagination, sorting, loading, error, onPageChange, onSort, onPageSizeChange }) => {
@@ -73,14 +79,13 @@ const CheckInquiryResults = ({ results, pagination, sorting, loading, error, onP
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-right">
-          <thead className="bg-gray-50 border-b border-gray-200">
+          <thead className="bg-gray-50 border-b-2 border-gray-200">
             <tr>
               {COLUMNS.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-3 py-2 text-gray-700 font-bold whitespace-nowrap ${
-                    col.sortable ? 'cursor-pointer hover:bg-gray-100 select-none' : ''
-                  }`}
+                  className={`px-3 py-2 text-gray-700 font-bold whitespace-nowrap select-none
+                    ${col.sortable ? 'cursor-pointer hover:bg-gray-100' : ''}`}
                   onClick={() => col.sortable && handleSort(col.key)}
                 >
                   <span className="flex items-center gap-1">
@@ -95,13 +100,18 @@ const CheckInquiryResults = ({ results, pagination, sorting, loading, error, onP
           </thead>
           <tbody className="divide-y divide-gray-100">
             {results.map((row, index) => (
-              <tr key={row._id || index} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
+              <tr
+                key={row._id || index}
+                className={`border-b border-gray-100 transition-colors duration-150 cursor-pointer
+                  ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/60'}
+                  hover:bg-blue-50 hover:shadow-sm hover:shadow-blue-100/50`}
+              >
                 {COLUMNS.map((col) => (
                   <td key={col.key} className="px-3 py-2 whitespace-nowrap text-gray-700">
                     {col.key === 'Amount'
                       ? formatNumber(row[col.key])
                       : col.key === 'Status'
-                      ? formatStatus(row[col.key])
+                      ? <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-bold ${statusBadge(row[col.key])}`}>{formatStatus(row[col.key])}</span>
                       : row[col.key] || '-'}
                   </td>
                 ))}
