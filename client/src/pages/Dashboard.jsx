@@ -4,6 +4,7 @@ import Sidebar from '../components/Sidebar'
 import api from '../api'
 import CheckInquiryForm from '../components/CheckInquiryForm'
 import CheckInquiryResults from '../components/CheckInquiryResults'
+import CheckShabah from '../components/CheckShabah'
 
 const Dashboard = () => {
   const { logout } = useAuth()
@@ -120,6 +121,13 @@ const Dashboard = () => {
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">سامانه های جانبي</h2>
             <p className="text-gray-400 text-sm">محتوای سامانه های جانبي</p>
+          </div>
+        )
+      case 'chekahab':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">استعلام شهاب</h2>
+            <CheckShabah />
           </div>
         )
       case 'profile':
