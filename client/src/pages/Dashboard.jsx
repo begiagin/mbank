@@ -5,6 +5,7 @@ import api from '../api'
 import CheckInquiryForm from '../components/CheckInquiryForm'
 import CheckInquiryResults from '../components/CheckInquiryResults'
 import CheckShabah from '../components/CheckShabah'
+import PersianDate from '../components/persian/PersianDate'
 import TreasuryControl from '../components/TreasuryControl'
 
 const Dashboard = () => {
@@ -297,7 +298,7 @@ case 'khazine':
             <img src="/logo.png" alt="Bank Melli" className="h-8 w-auto" />
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-white/70 text-xs hidden sm:inline">سه شنبه ۶ مرداد ۱۴۰۵</span>
+            <span className="text-white/70 text-xs hidden sm:inline"><PersianDate /></span>
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}

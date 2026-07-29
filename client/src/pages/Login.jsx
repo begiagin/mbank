@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate, Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth/AuthContext'
 import Captcha from '../components/Captcha'
+import PersianDate from '../components/persian/PersianDate'
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const Login = () => {
             <img src="/logo.png" alt="Bank Melli" className="h-10 w-auto" />
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-white/70 text-xs hidden sm:inline">سه شنبه ۶ مرداد ۱۴۰۵</span>
+            <span className="text-white/70 text-xs hidden sm:inline"><PersianDate /></span>
           </div>
         </div>
       </header>
