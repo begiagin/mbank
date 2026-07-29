@@ -6,9 +6,20 @@ const router = express.Router()
 
 router.post('/search', verifyToken, async (req, res) => {
   try {
-    const criteria = req.body
-    const results = await searchCheckInquiry(criteria)
-    res.json({ results, count: results.length })
+    const criteria = {
+      ...req.body,
+      page: parseInt(req.body.page) || 1,
+      pageSize: parseInt(req.body.pageSize) || 20,
+      sortField: req.body.sortField || 'RegisterDate',
+      sortOrder: req.body.sortOrder || 'asc',
+    }
+
+    const { results, pagination } = await searchCheckInquiry(criteria)
+
+    res.json({
+      results,
+      pagination,
+    })
   } catch (error) {
     console.error('Check inquiry search error:', error)
     res.status(500).json({ message: 'خطای سرور' })

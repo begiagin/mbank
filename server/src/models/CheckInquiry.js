@@ -1,42 +1,101 @@
 import { users } from '../db.js'
 
+const SORTABLE_FIELDS = [
+  'RegisterDate',
+  'DueDate',
+  'Amount',
+  'Status',
+  'OwnerName',
+]
+
+const buildQuery = (criteria) => {
+  const query = {}
+
+  if (criteria.registrationDate) {
+    query.RegisterDate = criteria.registrationDate
+  }
+  if (criteria.dueDate) {
+    query.DueDate = criteria.dueDate
+  }
+  if (criteria.treasuryDate) {
+    query.TreasuryDate = criteria.treasuryDate
+  }
+  if (criteria.serialNumber) {
+    query.SayadNumber = criteria.serialNumber
+  }
+  if (criteria.batchNumber) {
+    query.ChequeBookNumber = criteria.batchNumber
+  }
+  if (criteria.initialInquiryHolder) {
+    query.FirstInquiryHolder = criteria.initialInquiryHolder
+  }
+  if (criteria.ownerFullName) {
+    query.OwnerName = { $regex: criteria.ownerFullName, $options: 'i' }
+  }
+  if (criteria.ownerNationalId) {
+    query.OwnerNationalCode = criteria.ownerNationalId
+  }
+  if (criteria.firstPayeeFullName) {
+    query.FirstPayeeName = { $regex: criteria.firstPayeeFullName, $options: 'i' }
+  }
+  if (criteria.firstPayeeNationalId) {
+    query.FirstPayeeNationalCode = criteria.firstPayeeNationalId
+  }
+  if (criteria.processingBranch) {
+    query.BranchCode = criteria.processingBranch
+  }
+  if (criteria.checkAmount) {
+    query.Amount = criteria.checkAmount
+  }
+  if (criteria.checkAmountWords) {
+    query.AmountInWords = { $regex: criteria.checkAmountWords, $options: 'i' }
+  }
+  if (criteria.status) {
+    query.Status = criteria.status
+  }
+
+  return query
+}
+
 export const searchCheckInquiry = async (criteria) => {
   const {
-    registrationDate,
-    dueDate,
-    treasuryDate,
-    serialNumber,
-    batchNumber,
-    initialInquiryHolder,
-    ownerFullName,
-    ownerNationalId,
-    firstPayeeFullName,
-    firstPayeeNationalId,
-    processingBranch,
-    checkAmount,
-    checkAmountWords,
-    status,
+    page = 1,
+    pageSize = 20,
+    sortField = 'RegisterDate',
+    sortOrder = 'asc',
   } = criteria
 
-  const results = await users.find({})
+  const query = buildQuery(criteria)
 
-  return results.filter((record) => {
-    if (registrationDate && record.registrationDate !== registrationDate) return false
-    if (dueDate && record.dueDate !== dueDate) return false
-    if (treasuryDate && record.treasuryDate !== treasuryDate) return false
-    if (serialNumber && record.serialNumber !== serialNumber) return false
-    if (batchNumber && record.batchNumber !== batchNumber) return false
-    if (initialInquiryHolder && record.initialInquiryHolder !== initialInquiryHolder) return false
-    if (ownerFullName && record.ownerFullName !== ownerFullName) return false
-    if (ownerNationalId && record.ownerNationalId !== ownerNationalId) return false
-    if (firstPayeeFullName && record.firstPayeeFullName !== firstPayeeFullName) return false
-    if (firstPayeeNationalId && record.firstPayeeNationalId !== firstPayeeNationalId) return false
-    if (processingBranch && record.processingBranch !== processingBranch) return false
-    if (checkAmount && String(record.checkAmount) !== String(checkAmount)) return false
-    if (checkAmountWords && record.checkAmountWords !== checkAmountWords) return false
-    if (status && record.status !== status) return false
-    return true
-  })
+  const skip = (page - 1) * pageSize
+
+  const sort = {}
+  const normalizedSortField = SORTABLE_FIELDS.includes(sortField)
+    ? sortField
+    : 'RegisterDate'
+  sort[normalizedSortField] = sortOrder === 'desc' ? -1 : 1
+
+  const results = await users
+    .find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(pageSize)
+    .exec()
+
+  const totalCount = await users.count(query).exec()
+  const totalPages = Math.ceil(totalCount / pageSize)
+
+  return {
+    results,
+    pagination: {
+      page,
+      pageSize,
+      totalCount,
+      totalPages,
+      hasNext: page < totalPages,
+      hasPrev: page > 1,
+    },
+  }
 }
 
 export const saveCheckInquiry = async (data) => {
@@ -82,46 +141,52 @@ export const importNdjsonToDb = async () => {
 
   for (const file of ndjsonFiles) {
     const filePath = path.join(dataDir, file)
-    const content = fs.readFileSync(filePath, 'utf-8')
-    const lines = content.trim().split('\n')
 
-    for (const line of lines) {
-      if (!line.trim()) continue
-      try {
-        const doc = JSON.parse(line)
+    const readStream = fs.createReadStream(filePath, { encoding: 'utf-8' })
+    let buffer = ''
 
-        const existing = await users.findOne({ SayadNumber: doc.SayadNumber })
-        if (existing) continue
+    for await (const chunk of readStream) {
+      buffer += chunk
+      const lines = buffer.split('\n')
+      buffer = lines.pop()
 
-        const record = {
-          RegisterDate: doc.RegisterDate || '',
-          DueDate: doc.DueDate || '',
-          TreasuryDate: doc.TreasuryDate || '',
-          SayadNumber: doc.SayadNumber || '',
-          ChequeBookNumber: doc.ChequeBookNumber || '',
-          FirstInquiryHolder: doc.FirstInquiryHolder || '',
-          OwnerName: doc.OwnerName || '',
-          OwnerNationalCode: doc.OwnerNationalCode || '',
-          FirstPayeeName: doc.FirstPayeeName || '',
-          FirstPayeeNationalCode: doc.FirstPayeeNationalCode || '',
-          BranchCode: doc.BranchCode || 0,
-          Amount: doc.Amount || 0,
-          AmountInWords: doc.AmountInWords || '',
-          Status: doc.Status || 'PENDING',
-          ReturnedReason: doc.ReturnedReason || '',
-          ReturnedDate: doc.ReturnedDate || null,
-          createdAt: new Date().toISOString(),
-        }
+      for (const line of lines) {
+        if (!line.trim()) continue
+        try {
+          const doc = JSON.parse(line)
+          const existing = await users.findOne({ SayadNumber: doc.SayadNumber })
+          if (existing) continue
 
-        await new Promise((resolve, reject) => {
-          users.insert(record, (err, newDoc) => {
-            if (err) reject(err)
-            resolve(newDoc)
+          const record = {
+            RegisterDate: doc.RegisterDate || '',
+            DueDate: doc.DueDate || '',
+            TreasuryDate: doc.TreasuryDate || '',
+            SayadNumber: doc.SayadNumber || '',
+            ChequeBookNumber: doc.ChequeBookNumber || '',
+            FirstInquiryHolder: doc.FirstInquiryHolder || '',
+            OwnerName: doc.OwnerName || '',
+            OwnerNationalCode: doc.OwnerNationalCode || '',
+            FirstPayeeName: doc.FirstPayeeName || '',
+            FirstPayeeNationalCode: doc.FirstPayeeNationalCode || '',
+            BranchCode: doc.BranchCode || 0,
+            Amount: doc.Amount || 0,
+            AmountInWords: doc.AmountInWords || '',
+            Status: doc.Status || 'PENDING',
+            ReturnedReason: doc.ReturnedReason || '',
+            ReturnedDate: doc.ReturnedDate || null,
+            createdAt: new Date().toISOString(),
+          }
+
+          await new Promise((resolve, reject) => {
+            users.insert(record, (err, newDoc) => {
+              if (err) reject(err)
+              resolve(newDoc)
+            })
           })
-        })
-        imported++
-      } catch (e) {
-        console.error(`Error parsing line in ${file}:`, e.message)
+          imported++
+        } catch (e) {
+          console.error(`Error parsing line in ${file}:`, e.message)
+        }
       }
     }
   }
