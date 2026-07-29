@@ -126,7 +126,7 @@ const Dashboard = () => {
             />
           </div>
         )
-case 'sadsad':
+      case 'sadsad':
         return (
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">سامانه سداد</h2>
@@ -223,7 +223,8 @@ case 'sadsad':
             )}
           </div>
         )
-case 'fund-transfer':
+      case 'khazine':
+      case 'fund-transfer':
         return (
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">انتقال وجوه</h2>
@@ -258,7 +259,7 @@ case 'fund-transfer':
             <p className="text-gray-400 text-sm">محتوای تبدیل قالب وجوه</p>
           </div>
         )
-       case 'identity':
+      case 'identity':
         return (
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">استعلام هویتی</h2>
