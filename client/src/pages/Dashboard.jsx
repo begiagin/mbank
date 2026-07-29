@@ -5,6 +5,7 @@ import api from '../api'
 import CheckInquiryForm from '../components/CheckInquiryForm'
 import CheckInquiryResults from '../components/CheckInquiryResults'
 import CheckShabah from '../components/CheckShabah'
+import TreasuryControl from '../components/TreasuryControl'
 
 const Dashboard = () => {
   const { logout } = useAuth()
@@ -223,40 +224,10 @@ const Dashboard = () => {
             )}
           </div>
         )
-      case 'khazine':
-      case 'fund-transfer':
+case 'khazine':
         return (
           <div className="space-y-4">
-            <h2 className="text-gray-700 text-lg font-bold">انتقال وجوه</h2>
-            <p className="text-gray-400 text-sm">محتوای انتقال وجوه</p>
-          </div>
-        )
-      case 'corrective-funds':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-gray-700 text-lg font-bold">وجوه اصلاحی</h2>
-            <p className="text-gray-400 text-sm">محتوای وجوه اصلاحی</p>
-          </div>
-        )
-      case 'informal-funds':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-gray-700 text-lg font-bold">وجوه انفورماتیک</h2>
-            <p className="text-gray-400 text-sm">محتوای وجوه انفورماتیک</p>
-          </div>
-        )
-      case 'host-control':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-gray-700 text-lg font-bold">هاست کنترل</h2>
-            <p className="text-gray-400 text-sm">محتوای هاست کنترل</p>
-          </div>
-        )
-      case 'currency-convert':
-        return (
-          <div className="space-y-4">
-            <h2 className="text-gray-700 text-lg font-bold">تبدیل قالب وجوه</h2>
-            <p className="text-gray-400 text-sm">محتوای تبدیل قالب وجوه</p>
+            <TreasuryControl />
           </div>
         )
       case 'identity':
