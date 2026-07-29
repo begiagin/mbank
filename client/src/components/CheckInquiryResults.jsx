@@ -95,7 +95,7 @@ const CheckInquiryResults = ({ results, pagination, sorting, loading, error, onP
           </thead>
           <tbody className="divide-y divide-gray-100">
             {results.map((row, index) => (
-              <tr key={row._id || index} className="hover:bg-gray-50 transition-colors">
+              <tr key={row._id || index} className={`hover:bg-gray-50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}`}>
                 {COLUMNS.map((col) => (
                   <td key={col.key} className="px-3 py-2 whitespace-nowrap text-gray-700">
                     {col.key === 'Amount'
