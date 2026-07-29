@@ -21,7 +21,6 @@ const Dashboard = () => {
     setFilters(searchFilters)
     setLoading(true)
     setError('')
-    setResults([])
     try {
       const params = { ...searchFilters, page: 1, pageSize: pagination.pageSize, sortField: sorting.sortField, sortOrder: sorting.sortOrder }
       Object.keys(params).forEach(k => params[k] === '' && delete params[k])
