@@ -75,14 +75,23 @@ export const searchCheckInquiry = async (criteria) => {
     : 'RegisterDate'
   sort[normalizedSortField] = sortOrder === 'desc' ? -1 : 1
 
-  const results = await users
-    .find(query)
-    .sort(sort)
-    .skip(skip)
-    .limit(pageSize)
-    .exec()
+  const results = await new Promise((resolve, reject) => {
+    users.find(query)
+      .sort(sort)
+      .skip(skip)
+      .limit(pageSize)
+      .exec((err, docs) => {
+        if (err) reject(err)
+        resolve(docs)
+      })
+  })
 
-  const totalCount = await users.count(query).exec()
+  const totalCount = await new Promise((resolve, reject) => {
+    users.count(query).exec((err, count) => {
+      if (err) reject(err)
+      resolve(count)
+    })
+  })
   const totalPages = Math.ceil(totalCount / pageSize)
 
   return {
