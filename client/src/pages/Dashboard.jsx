@@ -85,6 +85,23 @@ const Dashboard = () => {
     }
   }
 
+  const handleSettlementSearch = async (searchFilters) => {
+    setFilters(searchFilters)
+    setLoading(true)
+    setError('')
+    try {
+      const params = { ...searchFilters, page: 1, pageSize: pagination.pageSize, sortField: sorting.sortField, sortOrder: sorting.sortOrder }
+      Object.keys(params).forEach(k => params[k] === '' && delete params[k])
+      const data = await api.post('/settle-inquiry/search', params)
+      setResults(data.results || [])
+      setPagination({ page: 1, pageSize: data.pagination?.pageSize || 20, total: data.pagination?.totalCount || 0 })
+    } catch (err) {
+      setError(err.message || 'خطا در جستجو')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handleMenuClick = (menuKey) => {
     setActiveMenu(activeMenu === menuKey ? null : menuKey)
     setSidebarOpen(false)
@@ -109,7 +126,104 @@ const Dashboard = () => {
             />
           </div>
         )
-      case 'identity':
+case 'sadsad':
+        return (
+          <div className="space-y-4">
+            <h2 className="text-gray-700 text-lg font-bold">سامانه سداد</h2>
+            <form onSubmit={(e) => { e.preventDefault(); handleSettlementSearch({ nationalId: filters.nationalId || '', settlementNumber: filters.settlementNumber || '' }) }} className="space-y-4">
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded text-sm text-center">
+                  {error}
+                </div>
+              )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    <span className="text-red-500">*</span>{' '}
+                    کد ملی
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-md bg-gray-50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
+                    <div className="px-3 py-2">
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      value={filters.nationalId || ''}
+                      onChange={(e) => handleSettlementSearch({ ...filters, nationalId: e.target.value })}
+                      required
+                      maxLength={10}
+                      className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
+                      placeholder="کد ملی"
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-gray-700 text-sm font-bold mb-1.5">
+                    <span className="text-red-500">*</span>{' '}
+                    شناسه ده رقمی شماره سداد
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-md bg-gray-50 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all">
+                    <div className="px-3 py-2">
+                      <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                      </svg>
+                    </div>
+                    <input
+                      type="text"
+                      value={filters.settlementNumber || ''}
+                      onChange={(e) => handleSettlementSearch({ ...filters, settlementNumber: e.target.value })}
+                      required
+                      maxLength={10}
+                      className="flex-1 px-3 py-2 bg-transparent text-gray-800 text-sm border-none outline-none font-iransans"
+                      placeholder="شناسه ده رقمی"
+                      autoComplete="off"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-red-700 hover:bg-red-800 disabled:bg-red-400 text-white font-bold py-3 rounded-md transition-colors duration-200 mt-6 text-sm"
+              >
+                {loading ? 'در حال جستجو...' : 'جستجو'}
+              </button>
+            </form>
+            {results.length > 0 && (
+              <div className="mt-4 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                <h3 className="text-gray-700 text-sm font-bold mb-3">
+                  نتایج جستجو ({results.length})
+                </h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-right">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="px-3 py-2 text-gray-600 font-bold">کد ملی</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">شناسه سداد</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">وضعیت</th>
+                        <th className="px-3 py-2 text-gray-600 font-bold">مبلغ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {results.map((r, i) => (
+                        <tr key={i} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-3 py-2 text-gray-700">{r.nationalId}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.settlementNumber}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.status}</td>
+                          <td className="px-3 py-2 text-gray-700">{r.amount}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )
+       case 'identity':
         return (
           <div className="space-y-4">
             <h2 className="text-gray-700 text-lg font-bold">استعلام هویتی</h2>
