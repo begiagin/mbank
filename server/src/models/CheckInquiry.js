@@ -154,9 +154,6 @@ export const importNdjsonToDb = async () => {
         if (!line.trim()) continue
         try {
           const doc = JSON.parse(line)
-          const existing = await users.findOne({ SayadNumber: doc.SayadNumber })
-          if (existing) continue
-
           const record = {
             RegisterDate: doc.RegisterDate || '',
             DueDate: doc.DueDate || '',
@@ -185,7 +182,7 @@ export const importNdjsonToDb = async () => {
           })
           imported++
         } catch (e) {
-          console.error(`Error parsing line in ${file}:`, e.message)
+          console.error(`Error line in ${file}:`, e.message)
         }
       }
     }
