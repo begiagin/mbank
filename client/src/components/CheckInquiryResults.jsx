@@ -16,6 +16,12 @@ const COLUMNS = [
   { key: 'Status', label: 'وضعیت', sortable: true },
 ]
 
+const STATUS_LABELS = {
+  PASSED: 'پاس شده',
+  PENDING: 'در انتظار',
+  RETURNED: 'مرجوع شده',
+}
+
 const STATUS_STYLES = {
   PASSED: 'bg-green-100 text-green-800',
   PENDING: 'bg-amber-100 text-amber-800',
@@ -32,9 +38,7 @@ function formatStatus(status) {
 }
 
 function statusBadge(status) {
-  const label = STATUS_LABELS[status] || status || '-'
-  const style = STATUS_STYLES[status] || 'bg-gray-100 text-gray-800'
-  return style
+  return STATUS_STYLES[status] || 'bg-gray-100 text-gray-800'
 }
 
 const CheckInquiryResults = ({ results, pagination, sorting, loading, error, onPageChange, onSort, onPageSizeChange }) => {
