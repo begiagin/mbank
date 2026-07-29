@@ -30,13 +30,13 @@ const menuData = [
       { key: 'checkinquiry', label: 'استعلام چکاوک' },
       { key: 'chekahab', label: 'استعلام شهاب' },
       { key: 'sadsad', label: 'سامانه سداد' },
-      { key: 'khazine', label: 'کنترل خزانه', submenu: [
-        { key: 'fund-transfer', label: 'انتقال وجوه' },
-        { key: 'corrective-funds', label: 'وجوه اصلاحی' },
-        { key: 'informal-funds', label: 'وجوه انفورماتیک' },
-        { key: 'host-control', label: 'هاست کنترل' },
-        { key: 'currency-convert', label: 'تبدیل قالب وجوه' },
-      ] },
+      { divider: true },
+      { key: 'fund-transfer', label: 'انتقال وجوه' },
+      { key: 'corrective-funds', label: 'وجوه اصلاحی' },
+      { key: 'informal-funds', label: 'وجوه انفورماتیک' },
+      { key: 'host-control', label: 'هاست کنترل' },
+      { key: 'currency-convert', label: 'تبدیل قالب وجوه' },
+      { divider: true },
       { key: 'kar-gruhe', label: 'کارگروه وجوه نقدی' },
       { key: 'tabdelejaveh', label: 'تبدیل وجوه' },
       { divider: true },
@@ -50,15 +50,9 @@ const menuData = [
 
 const Sidebar = ({ onLogout, onMenuClick }) => {
   const [openIndex, setOpenIndex] = useState(null)
-  const [openSubIndex, setOpenSubIndex] = useState(null)
 
   const toggle = (index) => {
     setOpenIndex(openIndex === index ? null : index)
-  }
-
-  const toggleSub = (index, subIndex) => {
-    const key = `${index}-${subIndex}`
-    setOpenSubIndex(openSubIndex === key ? null : key)
   }
 
   const handleClick = (menuKey) => {
@@ -107,39 +101,6 @@ const Sidebar = ({ onLogout, onMenuClick }) => {
                     {item.submenu.map((sub, subIndex) => {
                       if (sub.divider) {
                         return <li key={`divider-${index}-${subIndex}`} className="my-1 border-t border-gray-200" />
-                      }
-                      if (sub.submenu) {
-                        return (
-                          <li key={subIndex}>
-                            <button
-                              onClick={() => { toggleSub(index, subIndex); handleClick(sub.key) }}
-                              className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-md transition-colors ${
-                                openSubIndex === `${index}-${subIndex}`
-                                  ? 'bg-gray-100 text-gray-900'
-                                  : 'text-gray-600 hover:text-red-700 hover:bg-gray-50'
-                              } bg-transparent border-none cursor-pointer w-full text-right`}
-                            >
-                              <span>{sub.label}</span>
-                              <svg className={`w-3 h-3 transition-transform duration-200 ${openSubIndex === `${index}-${subIndex}` ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </button>
-                            {openSubIndex === `${index}-${subIndex}` && (
-                              <ul className="mt-0.5 space-y-0.5 pr-3">
-                                {sub.submenu.map((subSub, ssIndex) => (
-                                  <li key={ssIndex}>
-                                    <button
-                                      onClick={() => handleClick(subSub.key)}
-                                      className="block w-full text-right px-2 py-1 text-xs text-gray-500 hover:text-red-700 hover:bg-gray-50 rounded transition-colors bg-transparent border-none cursor-pointer"
-                                    >
-                                      {subSub.label}
-                                    </button>
-                                  </li>
-                                ))}
-                              </ul>
-                            )}
-                          </li>
-                        )
                       }
                       return (
                         <li key={subIndex}>
