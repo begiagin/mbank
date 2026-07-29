@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import authRoutes from './routes/auth.js'
 import checkInquiryRoutes from './routes/checkInquiry.js'
 import { seedTestUser } from './models/User.js'
+import { importNdjsonToDb } from './models/CheckInquiry.js'
 
 dotenv.config()
 
@@ -28,5 +29,6 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, async () => {
   await seedTestUser()
+  await importNdjsonToDb()
   console.log(`mBank server running on port ${PORT}`)
 })

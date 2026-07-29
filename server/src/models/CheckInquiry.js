@@ -15,6 +15,7 @@ export const searchCheckInquiry = async (criteria) => {
     processingBranch,
     checkAmount,
     checkAmountWords,
+    status,
   } = criteria
 
   const results = await users.find({})
@@ -33,6 +34,7 @@ export const searchCheckInquiry = async (criteria) => {
     if (processingBranch && record.processingBranch !== processingBranch) return false
     if (checkAmount && String(record.checkAmount) !== String(checkAmount)) return false
     if (checkAmountWords && record.checkAmountWords !== checkAmountWords) return false
+    if (status && record.status !== status) return false
     return true
   })
 }
@@ -52,6 +54,7 @@ export const saveCheckInquiry = async (data) => {
     processingBranch: data.processingBranch || '',
     checkAmount: data.checkAmount || '',
     checkAmountWords: data.checkAmountWords || '',
+    status: data.status || 'PENDING',
     createdAt: new Date().toISOString(),
   }
   return new Promise((resolve, reject) => {
@@ -60,4 +63,69 @@ export const saveCheckInquiry = async (data) => {
       resolve(newRecord)
     })
   })
+}
+
+export const importNdjsonToDb = async () => {
+  const fs = await import('fs')
+  const path = await import('path')
+  const { fileURLToPath } = await import('url')
+
+  const __filename = fileURLToPath(import.meta.url)
+  const __dirname = path.dirname(__filename)
+  const dataDir = path.join(__dirname, '..', '..', 'data')
+
+  const ndjsonFiles = fs.readdirSync(dataDir).filter(
+    (f) => f.startsWith('cheques_') && f.endsWith('.ndjson')
+  )
+
+  let imported = 0
+
+  for (const file of ndjsonFiles) {
+    const filePath = path.join(dataDir, file)
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const lines = content.trim().split('\n')
+
+    for (const line of lines) {
+      if (!line.trim()) continue
+      try {
+        const doc = JSON.parse(line)
+
+        const existing = await users.findOne({ SayadNumber: doc.SayadNumber })
+        if (existing) continue
+
+        const record = {
+          RegisterDate: doc.RegisterDate || '',
+          DueDate: doc.DueDate || '',
+          TreasuryDate: doc.TreasuryDate || '',
+          SayadNumber: doc.SayadNumber || '',
+          ChequeBookNumber: doc.ChequeBookNumber || '',
+          FirstInquiryHolder: doc.FirstInquiryHolder || '',
+          OwnerName: doc.OwnerName || '',
+          OwnerNationalCode: doc.OwnerNationalCode || '',
+          FirstPayeeName: doc.FirstPayeeName || '',
+          FirstPayeeNationalCode: doc.FirstPayeeNationalCode || '',
+          BranchCode: doc.BranchCode || 0,
+          Amount: doc.Amount || 0,
+          AmountInWords: doc.AmountInWords || '',
+          Status: doc.Status || 'PENDING',
+          ReturnedReason: doc.ReturnedReason || '',
+          ReturnedDate: doc.ReturnedDate || null,
+          createdAt: new Date().toISOString(),
+        }
+
+        await new Promise((resolve, reject) => {
+          users.insert(record, (err, newDoc) => {
+            if (err) reject(err)
+            resolve(newDoc)
+          })
+        })
+        imported++
+      } catch (e) {
+        console.error(`Error parsing line in ${file}:`, e.message)
+      }
+    }
+  }
+
+  console.log(`Imported ${imported} cheque records from ndjson files`)
+  return imported
 }
